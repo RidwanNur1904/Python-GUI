@@ -1,7 +1,5 @@
-import tkinter
-import customtkinter
-from pytube import YouTube
+import tkinter as tk
+import customtkinter 
 
-# System Settings
-customtkinter.set_appearance_mode("System")
-customtkinter.set_default_color_theme("Blue")
+app = customtkinter.ctk_tk
+app.geometry("720x480")
