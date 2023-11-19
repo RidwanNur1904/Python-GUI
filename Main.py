@@ -7,7 +7,7 @@ from tkinter import filedialog
 def download():
     try:
         YouTubeLink = link.get()
-        YouTubeObject = YouTube(YouTubeLink)
+        YouTubeObject = YouTube(YouTubeLink, on_progress_callback=on_progress)
         
         # Get the highest resolution stream
         Video = YouTubeObject.streams.get_highest_resolution()
@@ -19,11 +19,21 @@ def download():
             download_path = folder_path
         
             # Download the video to the selected folder
+            title.configure(text = YouTubeObject.title)
             Video.download(download_path)
-            print("Download complete!")
-    except Exception as e:
-        print("Error:", str(e))
-        print("Invalid Link")
+            Finished.configure(text="Download Complete!")
+    except:
+        Finished.configure(text="Download Failed!")
+    Finished.configure(text="Download Complete!")
+    
+def on_progress(stream, chunk, bytes_remaining):
+    total_size = stream.filesize
+    bytes_downloaded = total_size - bytes_remaining
+    percentage_of_completion = bytes_downloaded / total_size * 100
+    per = str(int(percentage_of_completion))
+    NumPercentage.configure(text = per + '%')
+    NumPercentage.update()
+    progressBar.set(float(percentage_of_completion)/100)
     
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-,blue green
@@ -54,6 +64,16 @@ title.pack(padx=10, pady=10)
 url_var = tk.StringVar()
 link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack()
+
+Finished = customtkinter.CTkLabel(app, text="")
+Finished.pack()
+
+NumPercentage = customtkinter.CTkLabel(app, text="0%")
+NumPercentage.pack()
+
+progressBar = customtkinter.CTkProgressBar(app, width=400)
+progressBar.set(0)
+progressBar.pack(padx=10, pady=10)
 
 download = customtkinter.CTkButton(app, text="Download", command=download)
 download.pack(padx=20, pady=20)
