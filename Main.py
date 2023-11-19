@@ -4,39 +4,44 @@ from pytube import YouTube
 from PIL import Image, ImageTk
 from tkinter import filedialog
 
+
 def download():
     try:
         YouTubeLink = link.get()
         YouTubeObject = YouTube(YouTubeLink, on_progress_callback=on_progress)
-        
+
         # Get the highest resolution stream
         Video = YouTubeObject.streams.get_highest_resolution()
-        
+
         # Ask the user to select a folder
         folder_path = filedialog.askdirectory()
         if folder_path:
             # Set the download path to the selected folder
             download_path = folder_path
-        
+
             # Download the video to the selected folder
-            title.configure(text = YouTubeObject.title)
+            title.configure(text=YouTubeObject.title)
             Video.download(download_path)
             Finished.configure(text="Download Complete!")
     except:
         Finished.configure(text="Download Failed!")
     Finished.configure(text="Download Complete!")
-    
+
+
 def on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
     percentage_of_completion = bytes_downloaded / total_size * 100
     per = str(int(percentage_of_completion))
-    NumPercentage.configure(text = per + '%')
+    NumPercentage.configure(text=per + "%")
     NumPercentage.update()
     progressBar.set(float(percentage_of_completion))
-    
+
+
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-,blue green
+customtkinter.set_default_color_theme(
+    "blue"
+)  # Themes: blue (default), dark-,blue green
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("720x480")
